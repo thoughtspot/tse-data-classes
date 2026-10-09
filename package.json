@@ -1,0 +1,66 @@
+{
+  "name": "tse-data-classes",
+  "version": "2.0.1",
+  "description": "Classes to normalize and work with ThoughtSpot data payloads.",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "author": "ThoughtSpot, Inc.",
+  "keywords": [
+    "thoughtspot",
+    "tabular-data",
+    "data-classes"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thoughtspot/tse-data-classes.git"
+  },
+  "homepage": "https://github.com/thoughtspot/tse-data-classes#readme",
+  "bugs": {
+    "url": "https://github.com/thoughtspot/tse-data-classes/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "downloads",
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:pkg && npm run build:downloads",
+    "build:cjs": "tsc --project tsconfig.build.cjs.json",
+    "build:esm": "tsc --project tsconfig.build.esm.json",
+    "build:pkg": "node -e \"require('fs').writeFileSync('dist/cjs/package.json', JSON.stringify({type:'commonjs'})); require('fs').writeFileSync('dist/esm/package.json', JSON.stringify({type:'module'}))\"",
+    "build:downloads": "node scripts/build-downloads.mjs",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "verify": "npm run typecheck && npm run test:coverage && npm run build",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run verify"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.27",
+    "@vitest/coverage-v8": "4.1.11",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

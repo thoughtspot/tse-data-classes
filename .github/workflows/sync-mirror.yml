@@ -1,0 +1,29 @@
+name: Sync Repository to Public Mirror
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force sync all branches'
+        required: false
+        default: false
+        type: boolean
+      public_repo_name:
+        description: 'Public repository name (leave empty to auto-derive by removing "-private")'
+        required: false
+        type: string
+
+jobs:
+  call-sync-workflow:
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    uses: thoughtspot/workflows/.github/workflows/sync-to-public-mirror.yml@main
+    with:
+      force_sync: ${{ github.event.inputs.force_sync || false }}
+      public_repo_name: ${{ github.event.inputs.public_repo_name || 'tse-data-classes' }}
+      target_branches: 'main'
+    secrets:
+      SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
